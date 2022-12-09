@@ -29,14 +29,12 @@ class ReviewHandler(@Autowired val repository: ReviewRepository) {
        return reviewToBeUpdated
             .flatMap { exitingReview ->
                 request.bodyToMono(Review::class.java)
-                    .map { review ->
-                        exitingReview.comment = review.comment
-                        exitingReview.rating = review.rating
+                    .map { newReview ->
+                        exitingReview.comment = newReview.comment
+                        exitingReview.rating = newReview.rating
                     }
                     .flatMap { repository.save(exitingReview) }
             }
-           .flatMap { ServerResponse.ok().bodyValue(it) }
-
-
+           .flatMap { ServerResponse.status(HttpStatus.OK).build() }
     }
 }

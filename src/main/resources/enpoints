@@ -18,5 +18,5 @@ update Movie Review By Id
 curl -i \
 -H  "Content-Type: application/json" \
 -X PUT http://localhost:8081/reviews/1 \
--d '{"id": "1", "movieInfoId":500, "comment": "Breath taking", "rating": 10}'
+-d '{"id": "1", "movieInfoId":500, "comment": "Time waste", "rating": 1}'
 
