@@ -17,6 +17,7 @@ class ReviewRouter {
             .POST("/reviews") { reviewHandler.addReview(it)}
             .GET("/reviews") { reviewHandler.getReviews(it) }
             .PUT("/reviews/{id}") { reviewHandler.updateReview(it) }
+            .DELETE("/reviews/{id}") { reviewHandler.deleteReview(it) }
             .build()
     }
 }

@@ -19,6 +19,13 @@ class ReviewHandler(@Autowired val repository: ReviewRepository) {
     }
 
     fun getReviews(request: ServerRequest): Mono<ServerResponse> {
+        val movieInfoId = request.queryParam("movieInfoId")
+        if (movieInfoId.isPresent) {
+            val reviews = repository.findByMovieInfoId(movieInfoId.get())
+
+            return ServerResponse.status(HttpStatus.OK).body(reviews, Review::class.java).log()
+        }
+
         return ServerResponse.status(HttpStatus.OK).body(repository.findAll(), Review::class.java).log()
     }
 
@@ -36,5 +43,13 @@ class ReviewHandler(@Autowired val repository: ReviewRepository) {
                     .flatMap { repository.save(exitingReview) }
             }
            .flatMap { ServerResponse.status(HttpStatus.OK).build() }
+    }
+
+    fun deleteReview(request: ServerRequest): Mono<ServerResponse> {
+        val reviewId = request.pathVariable("id")
+        val existingReview = repository.findById(reviewId)
+
+        return existingReview.flatMap { repository.deleteById(reviewId) }
+            .then(ServerResponse.noContent().build())
     }
 }

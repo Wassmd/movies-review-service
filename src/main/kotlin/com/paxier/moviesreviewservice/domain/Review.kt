@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 @Document
 data class Review(
     @Id val id: String,
-    val movieInfoId: Long,
+    val movieInfoId: String,
     var comment: String,
     var rating: Double
 )
