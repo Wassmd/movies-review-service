@@ -3,7 +3,7 @@ curl http://localhost:8081/hello-world
 create  review:
 ---------------
 curl -i \
--d '{"id": "1", "movieInfoId":"500", "comment": "Terrific", "rating": 7.8}' \
+-d '{"id": "1", "movieInfoId":, "comment": "Terrific", "rating": 7.8}' \
 -H  "Content-Type: application/json" \
 -X POST http://localhost:8081/reviews
 
@@ -24,7 +24,7 @@ update Movie Review By Id
 curl -i \
 -H  "Content-Type: application/json" \
 -X PUT http://localhost:8081/reviews/1 \
--d '{"id": "1", "movieInfoId":500, "comment": "Time waste", "rating": 1}'
+-d '{"id": "4", "movieInfoId":500, "comment": "Time waste", "rating": 1}'
 
 Delete Review
 --------------

@@ -1,34 +1,29 @@
 package com.paxier.moviesreviewservice.exceptionhandler
 
-import org.slf4j.LoggerFactory
-import org.springframework.context.support.DefaultMessageSourceResolvable
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.validation.DefaultMessageCodesResolver
-import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.support.WebExchangeBindException
-import java.util.stream.Collector
-import java.util.stream.Collectors
+import org.springframework.stereotype.Component
+import org.springframework.web.server.ServerWebExchange
+import reactor.core.publisher.Mono
 
-@ControllerAdvice
-class GlobalErrorHandler {
+@Component
+class GlobalErrorHandler(private val objectMapper: ObjectMapper): ErrorWebExceptionHandler {
 
-    @ExceptionHandler(WebExchangeBindException::class)
-    fun handleRequestBodyError(ex: WebExchangeBindException): ResponseEntity<String> {
-        Logger.error("Exception caught in handleRequestBodyError:", ex.message, ex)
+    override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> {
+        val dataBufferFactory = exchange.response.bufferFactory()
+        val buffer = dataBufferFactory.wrap(objectMapper.writeValueAsBytes(ex.message))
 
-        var error = ex.bindingResult.allErrors.stream()
-            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .sorted()
-            .collect(Collectors.joining(","))
+        if (ex is ReviewDataException) {
+            exchange.response.statusCode = HttpStatus.BAD_REQUEST
+        } else if (ex is ReviewNotFoundException) {
+            exchange.response.statusCode = HttpStatus.NOT_FOUND
+        }
+        else {
+            exchange.response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR
+        }
 
-        Logger.error("Error is: $error")
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error)
-    }
-
-    companion object {
-        private val Logger = LoggerFactory.getLogger(GlobalErrorHandler::class.java)
+        return exchange.response.writeWith(Mono.just(buffer))
     }
 }
