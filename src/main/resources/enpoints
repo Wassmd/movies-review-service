@@ -3,38 +3,48 @@ curl http://localhost:8081/hello-world
 create  review:
 ---------------
 curl -i \
--d '{"id": "1", "movieInfoId":, "comment": "Terrific", "rating": 7.8}' \
+-d '{"id": "1", "movieInfoId":"1", "comment": "Terrific", "rating": 7.8}' \
 -H  "Content-Type: application/json" \
--X POST http://localhost:8081/reviews
+-X POST http://localhost:8082/reviews
+
+curl -i \
+-d '{"id": "3", "movieInfoId":"1", "comment": "BEST ACTION FILM OF ALL TIME!!!", "rating": 7.3}' \
+-H  "Content-Type: application/json" \
+-X POST http://localhost:8082/reviews
+
+curl -i \
+-d '{"id": "13", "movieInfoId":"1", "comment": "My childhood favoirite movie", "rating": 9}' \
+-H  "Content-Type: application/json" \
+-X POST http://localhost:8082/reviews
 
 curl -i \
 -d '{"id": "2", "movieInfoId":"600", "comment": "Awesome", "rating": 8.8}' \
 -H  "Content-Type: application/json" \
--X POST http://localhost:8081/reviews
+-X POST http://localhost:8082/reviews
 
 
 Get All Movie reviews
 -------------------
 curl -i \
 -H  "Content-Type: application/json" \
--X GET http://localhost:8081/reviews
+-X GET http://localhost:8082/reviews
 
 update Movie Review By Id
 --------------------
 curl -i \
 -H  "Content-Type: application/json" \
--X PUT http://localhost:8081/reviews/1 \
+-X PUT http://localhost:8082/reviews/1 \
 -d '{"id": "4", "movieInfoId":500, "comment": "Time waste", "rating": 1}'
 
 Delete Review
 --------------
 curl -i \
 -H  "Content-Type: application/json" \
--X DELETE http://localhost:8081/reviews/1
+-X DELETE http://localhost:8082/reviews/1
 
 
 find by movieInfoId
 -------------------
 curl -i \
 -H  "Content-Type: application/json" \
--X GET http://localhost:8081/reviews?movieInfoId=500
+-X GET http://localhost:8082/reviews?movieInfoId=1
